@@ -1,0 +1,39 @@
+services:
+  app:
+    build: .
+    image: sofyaandrade/plataforma-treinos-online:1.0
+    container_name: plataforma-treinos-app
+    ports:
+      - "8080:8080"
+    environment:
+      APP_PORT: 8080
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: treinosdb
+    depends_on:
+      - db
+    networks:
+      - treinos-network
+
+  db:
+    image: postgres:16-alpine
+    container_name: plataforma-treinos-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: treinosdb
+    ports:
+      - "1710:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - treinos-network
+
+volumes:
+  postgres_data:
+
+networks:
+  treinos-network:
+    driver: bridge
